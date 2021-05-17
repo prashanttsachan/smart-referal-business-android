@@ -15,25 +15,25 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="50"
-                android:gravity="center"
+                android:layout_weight="30"
+                android:gravity="start"
                 android:orientation="vertical"
                 android:weightSum="10">
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1"
+                    android:layout_weight="3"
                     android:layout_marginHorizontal="20dp"
                     android:textStyle="bold"
                     android:textColor="@color/black"
+                    android:layout_marginTop="10dp"
                     android:textSize="17dp"
-                    android:layout_margin="20dp"
                     android:text="1. Enter the PAN Number in given Field."/>
                 <EditText
                     android:id="@+id/panNoEditText"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="2"
+                    android:layout_height="40dp"
+                    android:layout_weight="3"
                     android:layout_marginHorizontal="20dp"
                     android:hint="PAN Number"/>
             </LinearLayout>
@@ -41,17 +41,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:orientation="vertical"
-                android:layout_weight="40"
+                android:layout_weight="60"
                 android:weightSum="10">
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="2. Upload the PAN card Image."
                     android:textStyle="bold"
                     android:textSize="17dp"
                     android:textColor="@color/black"
                     android:layout_margin="20dp"/>
+                <ImageView
+                    android:id="@+id/pancardImageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:visibility="gone"
+                    android:layout_marginHorizontal="100dp"
+                    android:layout_weight="5"/>
                 <Button
                     android:id="@+id/chooseImagePanBtn"
                     android:layout_width="match_parent"
@@ -60,7 +66,7 @@
                     android:layout_weight="2"
                     android:layout_marginVertical="10dp"
                     android:layout_marginHorizontal="100dp"
-                    android:text="Choose file"
+                    android:text="Browse Image"
                     android:backgroundTint="@color/white"
                     android:textColor="@color/black"/>
 

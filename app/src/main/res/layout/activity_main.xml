@@ -32,8 +32,8 @@
                     android:layout_width="0dp"
                     android:layout_height="45dp"
                     android:layout_weight="20"
-                    android:padding="8dp"
-                    app:srcCompat="@drawable/phone_mobile_icon_142980" />
+                    android:padding="11dp"
+                    app:srcCompat="@drawable/mail" />
 
                 <EditText
                     android:id="@+id/editTextMobileNumber"
@@ -42,7 +42,7 @@
                     android:layout_marginEnd="20dp"
                     android:layout_weight="80"
                     android:ems="10"
-                    android:hint="Mobile Number"
+                    android:hint="Email"
                     android:inputType="text" />
             </LinearLayout>
 
@@ -68,12 +68,12 @@
                     android:id="@+id/editTextPassword"
                     android:layout_width="0dp"
                     android:layout_height="45dp"
-                    android:layout_marginEnd="20dp"
-                    android:layout_weight="80"
-                    android:ems="10"
                     android:hint="Password"
-                    android:inputType="textPassword" />
+                    android:inputType="textPassword"
+                    android:layout_weight="80"
+                    android:layout_marginEnd="20dp"/>
             </LinearLayout>
+
 
 
             <Button
@@ -118,18 +118,7 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-            <RelativeLayout
-                android:id="@+id/loadingPanel"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center">
 
-                <ProgressBar
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:forceHasOverlappingRendering="true"
-                    android:indeterminate="true" />
-            </RelativeLayout>
 
 
             <TextView
@@ -144,6 +133,18 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </FrameLayout>
 
+    </FrameLayout>
+    <RelativeLayout
+        android:id="@+id/loadingPanel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:forceHasOverlappingRendering="true"
+            android:indeterminate="true" />
+    </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

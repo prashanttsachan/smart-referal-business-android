@@ -60,6 +60,7 @@
                     android:padding="8dp"
                     android:layout_height="45dp"/>
                 <EditText
+                    android:id="@+id/userNameProfileEditText"
                     android:layout_width="0dp"
                     android:layout_weight="8"
                     android:layout_marginEnd="10dp"
@@ -82,6 +83,7 @@
                     android:layout_height="45dp"/>
 
             <EditText
+                android:id="@+id/userMobileNoProfileEdittext"
                 android:layout_width="0dp"
                 android:layout_weight="8"
                 android:layout_height="45dp"
@@ -101,18 +103,19 @@
                 <ImageView
                     android:layout_width="0dp"
                     android:layout_weight="2"
-                    android:src="@drawable/dob"
-                    android:padding="8dp"
+                    android:padding="11dp"
+                    android:src="@drawable/mail"
                     android:layout_height="45dp"/>
 
             <EditText
+                android:id="@+id/userMailProfileEdittext"
                 android:layout_width="0dp"
                 android:layout_weight="8"
                 android:layout_height="45dp"
-                android:inputType="date"
+                android:inputType="text"
                 android:textColor="@color/black"
                 android:textStyle="bold"
-                android:hint="Date of Birth"
+                android:hint="Email"
                 android:layout_marginEnd="10dp"/>
             </LinearLayout>
             <LinearLayout
@@ -128,14 +131,16 @@
                     android:padding="8dp"
                     android:layout_height="45dp"/>
 
-            <EditText
+            <Button
+                android:id="@+id/changePasswordBtn"
                 android:layout_width="0dp"
                 android:layout_weight="8"
                 android:layout_height="45dp"
-                android:textColor="@color/black"
+                android:textColor="#00BCD4"
+                android:background="@android:color/transparent"
                 android:textStyle="bold"
-                android:inputType="textPassword"
-                android:hint="Password"
+                android:textAlignment="textStart"
+                android:text="Change Password"
                 android:layout_marginEnd="10dp"/>
             </LinearLayout>
             <Button

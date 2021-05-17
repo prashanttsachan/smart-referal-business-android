@@ -15,36 +15,37 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="70"
-                android:gravity="center"
+                android:layout_weight="50"
+                android:gravity="start"
                 android:orientation="vertical"
                 android:weightSum="10">
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginHorizontal="20dp"
                     android:textStyle="bold"
                     android:textColor="@color/black"
                     android:textSize="17dp"
-                    android:layout_margin="20dp"
+                    android:layout_margin="10dp"
                     android:text="1. Enter the Account Number in given Fields."/>
                 <EditText
+                    android:id="@+id/accountholdername"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="2"
+                    android:layout_height="45dp"
+                    android:layout_marginVertical="10dp"
                     android:layout_marginHorizontal="20dp"
                     android:hint="Account Holder Name"/>
                 <EditText
+                    android:id="@+id/accountnumber"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="2"
+                    android:layout_height="45dp"
                     android:layout_marginHorizontal="20dp"
                     android:hint="Account Number"/>
                 <EditText
+                    android:id="@+id/IFSC"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="2"
+                    android:layout_height="45dp"
+                    android:layout_marginVertical="10dp"
                     android:layout_marginHorizontal="20dp"
                     android:hint="IFSC"/>
             </LinearLayout>
@@ -52,26 +53,31 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:orientation="vertical"
-                android:layout_weight="20"
+                android:layout_weight="40"
                 android:weightSum="10">
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="2. Upload the Passbook Image."
                     android:textStyle="bold"
+                    android:layout_marginVertical="10dp"
                     android:textSize="17dp"
                     android:textColor="@color/black"
                     android:layout_marginHorizontal="20dp"
                     android:layout_marginBottom="6dp"/>
+                <ImageView
+                    android:id="@+id/passbookImageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:visibility="gone"
+                    android:layout_marginHorizontal="100dp"
+                    android:layout_weight="9"/>
                 <Button
                     android:id="@+id/chooseImageAccountBtn"
                     android:layout_width="match_parent"
-
-                    android:layout_height="0dp"
-                    android:layout_weight="4"
+                    android:layout_height="40dp"
                     android:layout_marginHorizontal="100dp"
-                    android:text="Choose file"
+                    android:text="Browse Image"
                     android:backgroundTint="@color/white"
                     android:textColor="@color/black"/>
 
@@ -82,6 +88,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="10">
                 <Button
+                    android:id="@+id/submitKycInfoBtn"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:layout_marginTop="10dp"

@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,6 +28,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 
 import static android.graphics.Color.*;
@@ -46,11 +50,14 @@ public class MainActivity extends AppCompatActivity {
         TextView alertbox = (TextView) findViewById(R.id.alertBox);
         findViewById(R.id.loadingPanel).setVisibility(View.GONE);
 
+
+
         mRequestQueue = Volley.newRequestQueue(this);
         signin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
+
                 alertbox.setText("");
                 String url = "https://srbn.herokuapp.com/auth/login";
                 JSONObject jsonObject  = new JSONObject();
@@ -60,18 +67,24 @@ public class MainActivity extends AppCompatActivity {
                     Response.Listener<JSONObject> successListener = new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
+                            String token = new String();
                             try {
                                 JSONObject data = new JSONObject();
                                 data = response.getJSONObject("data");
-                                JSONObject user = new JSONObject();
-                                user = data.getJSONObject("user");
-                            } catch (JSONException e) {
+                                token = (String) data.getString("access_token");
+                                FileOutputStream fileout=openFileOutput("token.txt", MODE_PRIVATE);
+                                OutputStreamWriter outputWriter=new OutputStreamWriter(fileout);
+                                outputWriter.write(token);
+                                outputWriter.close();
+
+                            } catch (JSONException | IOException e) {
                                 e.printStackTrace();
                             }
 
 
                             findViewById(R.id.loadingPanel).setVisibility(View.GONE);
                             Intent i = new Intent(getApplicationContext(),userProfile.class);
+                            i.putExtra("token", token);
                             Toast.makeText(getApplicationContext(),"Successfully logged In",Toast.LENGTH_SHORT).show();
                             startActivity(i);
                         }
@@ -81,22 +94,18 @@ public class MainActivity extends AppCompatActivity {
 
                         @Override
                         public void onErrorResponse(VolleyError error) {
+
                             findViewById(R.id.loadingPanel).setVisibility(View.GONE);
-                            String json = null;
+                            String responseBody = null;
+                            try {
+                                responseBody = new String(error.networkResponse.data, "utf-8");
 
-                            NetworkResponse response = error.networkResponse;
-                            if(response != null && response.data != null){
-
-                                        json = new String(response.data);
-                                        if(json != null)
-                                            alertbox.setText(json);
-
-
-                                //Additional cases
+                            JSONObject data = new JSONObject(responseBody);
+                            String message = (String) data.get("message");
+                            alertbox.setText(message);
+                            } catch (UnsupportedEncodingException | JSONException e) {
+                                e.printStackTrace();
                             }
-
-
-                            alertbox.setText("Login Failed");
                         }
                     };
                     JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST,url,jsonObject,successListener,errorListener);
