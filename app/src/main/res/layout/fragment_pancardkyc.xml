@@ -33,6 +33,7 @@
                     android:id="@+id/panNoEditText"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
+                    android:maxLength="10"
                     android:layout_weight="3"
                     android:layout_marginHorizontal="20dp"
                     android:hint="PAN Number"/>
@@ -86,6 +87,19 @@
                     android:text="Next"/>
             </LinearLayout>
 
+
         </LinearLayout>
+    <RelativeLayout
+        android:id="@+id/loadingPanel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:forceHasOverlappingRendering="true"
+            android:indeterminate="true" />
+    </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

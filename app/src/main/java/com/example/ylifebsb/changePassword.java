@@ -3,6 +3,7 @@ package com.example.ylifebsb;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -33,8 +34,10 @@ public class changePassword extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password);
-        Intent profilechangepassword = getIntent();
-        String token = (String) profilechangepassword.getSerializableExtra("token");
+        DBHelper db = new DBHelper(this);
+        Cursor c = db.getdata();
+        c.moveToNext();
+        String token = c.getString(c.getColumnIndex("token"));
         EditText oldpassword = (EditText) findViewById(R.id.oldpasswordchangePasswordEditText);
         EditText newpassword = (EditText) findViewById(R.id.newpasswordchangePasswordEditText);
         EditText confirmpassword = (EditText) findViewById(R.id.confirmNewPasswordChangePasswordEditText);

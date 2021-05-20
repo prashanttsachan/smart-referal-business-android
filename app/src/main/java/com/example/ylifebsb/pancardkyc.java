@@ -52,6 +52,7 @@ public class pancardkyc extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view =inflater.inflate(R.layout.fragment_pancardkyc, container, false);
+        view.findViewById(R.id.loadingPanel).setVisibility(View.GONE);
         Button choose = (Button) view.findViewById(R.id.chooseImagePanBtn);
         Button next = (Button) view.findViewById(R.id.nextKycPANBtn);
 
@@ -62,6 +63,7 @@ public class pancardkyc extends Fragment {
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                getView().findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
                 update();
 
             }
@@ -108,8 +110,8 @@ public class pancardkyc extends Fragment {
                     @Override
                     public void onResponse(NetworkResponse response) {
                         try {
+                            getView().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
                             JSONObject jsonObject = new JSONObject(new String(response.data));
-                            Toast.makeText(getActivity().getApplicationContext(),"Successfull",Toast.LENGTH_SHORT).show();
                             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.kycFramelayout, new Accountinfo()).addToBackStack(null).commit();
 
                         } catch (JSONException e) {
@@ -122,6 +124,7 @@ public class pancardkyc extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        getView().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
                         Toast.makeText(getActivity(), "Failed", Toast.LENGTH_LONG).show();
 
                     }

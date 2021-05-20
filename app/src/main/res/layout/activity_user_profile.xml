@@ -32,8 +32,7 @@
             <Button
                 android:id="@+id/chooseImageBtn"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="2"
+                android:layout_height="wrap_content"
                 android:layout_marginHorizontal="100dp"
                 android:text="Edit Image"
                 android:textColor="#00BCD4"
@@ -153,5 +152,18 @@
                 android:backgroundTint="#F44336"/>
         </LinearLayout>
 
+
     </LinearLayout>
+    <RelativeLayout
+        android:id="@+id/loadingPanel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:forceHasOverlappingRendering="true"
+            android:indeterminate="true" />
+    </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -46,6 +46,7 @@ public class Accountinfo extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_accountinfo, container, false);
         Button choose = (Button) view.findViewById(R.id.chooseImageAccountBtn);
+        view.findViewById(R.id.loadingPanel).setVisibility(View.GONE);
         Button submit = (Button) view.findViewById(R.id.submitKycInfoBtn);
         choose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,19 +59,21 @@ public class Accountinfo extends Fragment {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                view.findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
                 update();
             }
         });
         // Inflate the layout for this fragment
         return view;
     }
+    Bitmap bitmap;
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == SELECT_PHOTO && resultCode == RESULT_OK && data != null && data.getData() !=null){
             uri = data.getData();
             try {
 
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
+                bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
                 ImageView passimg = (ImageView) getView().findViewById(R.id.passbookImageView);
                 passimg.setImageBitmap(bitmap);
                 passimg.setVisibility(View.VISIBLE);
@@ -81,6 +84,11 @@ public class Accountinfo extends Fragment {
 
         }
     }
+    public byte[] getFileDataFromDrawable(Bitmap bitmap) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 80, byteArrayOutputStream);
+        return byteArrayOutputStream.toByteArray();
+    }
 
 
     private void update() {
@@ -90,8 +98,9 @@ public class Accountinfo extends Fragment {
                     public void onResponse(NetworkResponse response) {
                         try {
                             JSONObject jsonObject = new JSONObject(new String(response.data));
-                            Toast.makeText(getActivity().getApplicationContext(),"Successfull",Toast.LENGTH_SHORT).show();
-                            Intent i = new Intent(getContext(),wallet.class);
+                            getView().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+                            Toast.makeText(getActivity().getApplicationContext(),"Successfully uploaded the data.",Toast.LENGTH_SHORT).show();
+                            Intent i = new Intent(getContext(),homelayout.class);
                             startActivity(i);
 
                         } catch (JSONException e) {
@@ -104,7 +113,8 @@ public class Accountinfo extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getActivity(), "No internet connection", Toast.LENGTH_LONG).show();
+                        getView().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+                        Toast.makeText(getActivity(), "Failed", Toast.LENGTH_LONG).show();
 
                     }
                 }) {
@@ -114,6 +124,14 @@ public class Accountinfo extends Fragment {
                 String token = ((KYCadhaar)getContext()).getToken();
                 headers.put("Authorization", token);
                 return headers;
+            }
+            @Override
+            protected Map<String, DataPart> getByteData() {
+                Map<String, DataPart> params = new HashMap<>();
+                String imagename = "Passbook";
+                params.put("bank", new DataPart(imagename+".png", getFileDataFromDrawable(bitmap)));
+
+                return params;
             }
 
             @Override

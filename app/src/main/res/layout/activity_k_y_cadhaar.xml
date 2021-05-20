@@ -91,6 +91,13 @@
                     android:text="Browse Back Image"
                     android:backgroundTint="@color/white"
                     android:textColor="@color/black"/>
+                <TextView
+                    android:id="@+id/kycAadharAlertBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginTop="10dp"
+                    android:textColor="#F10C0C"/>
 
             </LinearLayout>
             <LinearLayout
@@ -109,6 +116,18 @@
 
 
         </LinearLayout>
+        <RelativeLayout
+            android:id="@+id/loadingPanel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:forceHasOverlappingRendering="true"
+                android:indeterminate="true" />
+        </RelativeLayout>
     </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

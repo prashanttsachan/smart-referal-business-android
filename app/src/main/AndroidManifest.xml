@@ -11,9 +11,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.YLIFEBSB">
-        <activity android:name=".changePassword"></activity>
-        <activity android:name=".wallet" />
-        <activity android:name=".KYCadhaar" />
+        <activity
+            android:name=".homelayout"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".changePassword" />
+        <activity
+            android:name=".wallet"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity android:name=".KYCadhaar"
+            android:label="KYC-Form"/>
         <activity android:name=".userProfile" />
         <activity
             android:name=".MainActivity"

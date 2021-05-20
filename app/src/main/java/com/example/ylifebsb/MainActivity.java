@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Application;
 import android.app.VoiceInteractor;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -36,6 +37,21 @@ import java.io.UnsupportedEncodingException;
 import static android.graphics.Color.*;
 
 public class MainActivity extends AppCompatActivity {
+    @Override
+    protected void onStart() {
+        DBHelper db = new DBHelper(this);
+        Cursor c = db.getdata();
+        if(c.getCount()!=0) {
+            c.moveToNext();
+            String token = c.getString(c.getColumnIndex("token"));
+            if (!(token.equals("") || token.equals(null))) {
+                Intent i = new Intent(getApplicationContext(), homelayout.class);
+                startActivity(i);
+            }
+        }
+        super.onStart();
+    }
+
     RequestQueue mRequestQueue;
 
     @Override
@@ -53,74 +69,89 @@ public class MainActivity extends AppCompatActivity {
 
 
         mRequestQueue = Volley.newRequestQueue(this);
+        DBHelper db = new DBHelper(this);
         signin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
+                if (email.getText().toString().equals("")) {
+                    alertbox.setText("Enter email id!");
+                } else if (password.getText().toString().equals(""))
+                    alertbox.setText("Enter Password!");
+                else {
+                    findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
 
-                alertbox.setText("");
-                String url = "https://srbn.herokuapp.com/auth/login";
-                JSONObject jsonObject  = new JSONObject();
-                try{
-                    jsonObject.put("email",email.getText().toString());
-                    jsonObject.put("password",password.getText().toString());
-                    Response.Listener<JSONObject> successListener = new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            String token = new String();
-                            try {
+                    alertbox.setText("");
+                    String url = "https://srbn.herokuapp.com/auth/login";
+                    JSONObject jsonObject = new JSONObject();
+                    try {
+                        jsonObject.put("email", email.getText().toString());
+                        jsonObject.put("password", password.getText().toString());
+                        Response.Listener<JSONObject> successListener = new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+
                                 JSONObject data = new JSONObject();
-                                data = response.getJSONObject("data");
-                                token = (String) data.getString("access_token");
-                                FileOutputStream fileout=openFileOutput("token.txt", MODE_PRIVATE);
-                                OutputStreamWriter outputWriter=new OutputStreamWriter(fileout);
-                                outputWriter.write(token);
-                                outputWriter.close();
+                                try {
+                                    data = response.getJSONObject("data");
+                                    String token = (String) data.getString("access_token");
+                                    JSONObject user = new JSONObject();
+                                    user = data.getJSONObject("user");
+                                    String name = user.getString("firstname") + " " + user.getString("lastname");
+                                    String email = user.getString("email");
+                                    db.insert(token, name, email);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
 
-                            } catch (JSONException | IOException e) {
-                                e.printStackTrace();
+
+                                findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+                                Intent i = new Intent(getApplicationContext(), homelayout.class);
+                                Toast.makeText(getApplicationContext(), "Successfully logged In", Toast.LENGTH_SHORT).show();
+                                startActivity(i);
                             }
+                        };
 
+                        Response.ErrorListener errorListener = new Response.ErrorListener() {
 
-                            findViewById(R.id.loadingPanel).setVisibility(View.GONE);
-                            Intent i = new Intent(getApplicationContext(),userProfile.class);
-                            i.putExtra("token", token);
-                            Toast.makeText(getApplicationContext(),"Successfully logged In",Toast.LENGTH_SHORT).show();
-                            startActivity(i);
-                        }
-                    };
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
 
-                    Response.ErrorListener errorListener = new Response.ErrorListener(){
+                                findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+                                String responseBody = null;
+                                try {
+                                    responseBody = new String(error.networkResponse.data, "utf-8");
 
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-
-                            findViewById(R.id.loadingPanel).setVisibility(View.GONE);
-                            String responseBody = null;
-                            try {
-                                responseBody = new String(error.networkResponse.data, "utf-8");
-
-                            JSONObject data = new JSONObject(responseBody);
-                            String message = (String) data.get("message");
-                            alertbox.setText(message);
-                            } catch (UnsupportedEncodingException | JSONException e) {
-                                e.printStackTrace();
+                                    JSONObject data = new JSONObject(responseBody);
+                                    String message = (String) data.get("message");
+                                    alertbox.setText(message);
+                                } catch (UnsupportedEncodingException | JSONException e) {
+                                    e.printStackTrace();
+                                }
                             }
-                        }
-                    };
-                    JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST,url,jsonObject,successListener,errorListener);
-                    mRequestQueue.add(request);
-                } catch (JSONException e) {
-                    Toast.makeText(getApplicationContext(),"JSON exception",Toast.LENGTH_SHORT).show();
+                        };
+                        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonObject, successListener, errorListener);
+                        mRequestQueue.add(request);
+                    } catch (JSONException e) {
+                        Toast.makeText(getApplicationContext(), "JSON exception", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
+
         });
         Button forgotpassword = (Button) findViewById(R.id.forgotPasswordBtn);
-        Button signIn =  (Button) findViewById(R.id.signInBtn);
+        Button register =  (Button) findViewById(R.id.registerBtn);
+
+
         forgotpassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getSupportFragmentManager().beginTransaction().replace(R.id.framelayout, new Forgetpassword()).addToBackStack(null).commit();
+            }
+        });
+        register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getSupportFragmentManager().beginTransaction().replace(R.id.framelayout, new Register()).addToBackStack(null).commit();
             }
         });
     }

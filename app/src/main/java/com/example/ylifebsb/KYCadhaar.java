@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -41,29 +43,49 @@ import java.util.Hashtable;
 import java.util.Map;
 
 public class KYCadhaar extends AppCompatActivity {
+    @Override
+    protected void onStart() {
+        DBHelper db = new DBHelper(this);
+        Cursor c = db.getdata();
+        c.moveToNext();
+        String token = c.getString(c.getColumnIndex("token"));
+        if((token.equals("") || token.equals(null))){
+            Intent i = new Intent(getApplicationContext(),MainActivity.class);
+            startActivity(i);
+        }
+        super.onStart();
+    }
+
+
     int SELECT_PHOTO = 1;
     Uri uri;
     int i=0;
-    String token= new String();
-
-
-
-
-
-
+    DBHelper db = new DBHelper(this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_k_y_cadhaar);
+        findViewById(R.id.loadingPanel).setVisibility(View.GONE);
         Button next = (Button) findViewById(R.id.nextKycAdharBtn);
-        Intent l = getIntent();
-        token = (String) l.getSerializableExtra("token");
 
+        EditText aadhar = (EditText) findViewById(R.id.AadharNoEditText);
+        ImageView front = (ImageView) findViewById(R.id.frontAadharImageView);
+        ImageView back = (ImageView) findViewById(R.id.backAadharImageView);
+        TextView alertbox = (TextView) findViewById(R.id.kycAadharAlertBox);
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
-                SendImage();
+                if(aadhar.getText().toString().equals("")){
+                    alertbox.setText("Aadhar number is not there!");
+                }
+                else if(front.getDrawable()==null || back.getDrawable()==null){
+                    alertbox.setText("Please upload the Image");
+                }
+                else{
+
+                    findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
+                    SendImage();
+                }
             }
         });
         Button choosefront = (Button) findViewById(R.id.chooseFrontImageAadhaarBtn);
@@ -131,10 +153,10 @@ public class KYCadhaar extends AppCompatActivity {
                 new Response.Listener<NetworkResponse>(){
                     @Override
                     public void onResponse(NetworkResponse response) {
-                       //9i findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+                       findViewById(R.id.loadingPanel).setVisibility(View.GONE);
                         try {
+                            findViewById(R.id.loadingPanel).setVisibility(View.GONE);
                             JSONObject jsonObject = new JSONObject(new String(response.data));
-                            Toast.makeText(getApplicationContext(),"Successfull",Toast.LENGTH_SHORT).show();
                             getSupportFragmentManager().beginTransaction().replace(R.id.kycFramelayout, new pancardkyc()).addToBackStack(null).commit();
 
                         } catch (JSONException e) {
@@ -147,14 +169,17 @@ public class KYCadhaar extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        //findViewById(R.id.loadingPanel).setVisibility(View.GONE);
-                        Toast.makeText(KYCadhaar.this, "No internet connection", Toast.LENGTH_LONG).show();
+                        findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+                        Toast.makeText(KYCadhaar.this, "Failed", Toast.LENGTH_LONG).show();
 
                     }
                 }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<String, String>();
+                Cursor c = db.getdata();
+                c.moveToFirst();
+                String token = c.getString(c.getColumnIndex("token"));
                 headers.put("Authorization", token);
                 return headers;
             }
@@ -184,6 +209,16 @@ public class KYCadhaar extends AppCompatActivity {
     }
 
     public String getToken(){
+        Cursor c = db.getdata();
+        c.moveToFirst();
+        String token = c.getString(c.getColumnIndex("token"));
         return token;
+    }
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(getApplicationContext(),homelayout.class);
+        startActivity(i);
+
+        super.onBackPressed();
     }
 }

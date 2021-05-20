@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -45,21 +46,31 @@ public class userProfile extends AppCompatActivity {
         setContentView(R.layout.activity_user_profile);
         Button choose = (Button) findViewById(R.id.chooseImageBtn);
         img = (ImageView) findViewById(R.id.profile_image);
-        Intent i = getIntent();
-        String token = (String) i.getSerializableExtra("token");
+
+        //database initialisation
+        DBHelper db = new DBHelper(this);
+        Cursor c = db.getdata();
+        c.moveToFirst();
+        String token = c.getString(c.getColumnIndex("token"));
         Button changepassword = (Button) findViewById(R.id.changePasswordBtn);
+
+        //changepassword Activity call on changepassword button is pressed
         changepassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent changepass = new Intent(getApplicationContext(),changePassword.class);
-                changepass.putExtra("token",token);
                 startActivity(changepass);
-
             }
         });
+
+
+
+        //Api request to get data from the server
         StringRequest request = new StringRequest(Request.Method.GET,"https://srbn.herokuapp.com/auth/checkauth", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+                //Data is shown in the profile throw api
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     JSONObject data = new JSONObject();
@@ -76,17 +87,17 @@ public class userProfile extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                Toast.makeText(getApplicationContext(),"Success",Toast.LENGTH_SHORT).show();
             }
 
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(),"No internet",Toast.LENGTH_SHORT).show();
+
+                findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+                Toast.makeText(getApplicationContext(),"Failed",Toast.LENGTH_SHORT).show();
             }
         }) {
-
-            //This is for Headers If You Needed
+            //This is for Headers
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<String, String>();
                 headers.put("Authorization", token);
@@ -98,15 +109,7 @@ public class userProfile extends AppCompatActivity {
 
 
 
-        Button save = (Button) findViewById(R.id.saveProfileBtn);
-        save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(),KYCadhaar.class);
-                i.putExtra("token",token);
-                startActivity(i);
-            }
-        });
+
         choose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -131,5 +134,13 @@ public class userProfile extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(getApplicationContext(),homelayout.class);
+        startActivity(i);
+
+        super.onBackPressed();
     }
 }
