@@ -13,26 +13,39 @@
             android:icon="@drawable/transaction"
             android:title="Transaction"/>
 
-        <item android:id="@+id/menu_KYC"
-            android:icon="@drawable/kyc"
-            android:title="KYC"/>
+    </group>
+    <group>
+        <item android:title="KYC">
+            <menu>
+                <item  android:id="@+id/menu_aadhar"
+                    android:icon="@drawable/aadhar"
+                    android:title="Aadhar" />
+                <item android:title="Pan"
+                    android:icon="@drawable/pan"
+                    android:id="@+id/menu_pan"/>
+                <item android:id="@+id/menu_bank"
+                    android:icon="@drawable/bank_24"
+                    android:title="Bank Information"/>
+
+            </menu>
+        </item>
+
     </group>
 
 
+    <group >
         <item android:title="Member">
             <menu>
-                <group android:checkableBehavior="single">
                 <item android:id="@+id/menu_sponsermember"
                     android:icon="@drawable/member"
                     android:title="Sponser Member"/>
                 <item android:id="@+id/menu_downlinemember"
                     android:icon="@drawable/member"
                     android:title="Downline Member"/>
-                </group>
-
             </menu>
-
         </item>
+    </group>
+
 
     <group android:checkableBehavior="single">
         <item android:title="Logout">
@@ -40,7 +53,6 @@
                 <item android:id="@+id/menu_logout"
                     android:icon="@drawable/logout"
                     android:title="Logout"/>
-
             </menu>
         </item>
     </group>

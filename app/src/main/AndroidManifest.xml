@@ -18,8 +18,6 @@
         <activity
             android:name=".wallet"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <activity android:name=".KYCadhaar"
-            android:label="KYC-Form"/>
         <activity android:name=".userProfile" />
         <activity
             android:name=".MainActivity"

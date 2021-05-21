@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -26,6 +27,7 @@ public class homelayout extends AppCompatActivity {
     NavigationView nav;
     ActionBarDrawerToggle toggle;
     DrawerLayout drawerLayout;
+    FragmentManager fm = getSupportFragmentManager();
 
     @Override
     protected void onStart() {
@@ -40,6 +42,7 @@ public class homelayout extends AppCompatActivity {
         super.onStart();
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +50,8 @@ public class homelayout extends AppCompatActivity {
         DBHelper db = new DBHelper(this);
         Cursor c = db.getdata();
         c.moveToNext();
+        TextView usernameHomeScreen = (TextView) findViewById(R.id.userNameHomeTextView);
+        usernameHomeScreen.setText(c.getString(c.getColumnIndex("username")));
         nav =(NavigationView) findViewById(R.id.headermenu);
         View hview = nav.getHeaderView(0);
         TextView name = (TextView) hview.findViewById(R.id.headernameTextView);
@@ -75,8 +80,8 @@ public class homelayout extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.menu_home:{
-                        Intent i = new Intent(getApplicationContext(),homelayout.class);
-                        startActivity(i);
+                        for (int i = 0; i < getSupportFragmentManager().getBackStackEntryCount(); ++i)
+                            getSupportFragmentManager().popBackStack();
                         drawerLayout.closeDrawer(GravityCompat.START);
                         break;
                     }
@@ -87,29 +92,37 @@ public class homelayout extends AppCompatActivity {
                         break;
                     }
                     case R.id.menu_transaction:{
-                        Intent i = new Intent(getApplicationContext(),homelayout.class);
                         Toast.makeText(getApplicationContext(),"success",Toast.LENGTH_SHORT).show();
                         drawerLayout.closeDrawer(GravityCompat.START);
                         break;
                     }
-                    case R.id.menu_KYC:{
-                        Intent i = new Intent(getApplicationContext(),KYCadhaar.class);
+                    case R.id.menu_aadhar:{
+                        fm.beginTransaction().replace(R.id.homeFrameLayout, new aadhar()).addToBackStack(null).commit();
                         drawerLayout.closeDrawer(GravityCompat.START);
-                        startActivity(i);
+                        break;
+                    }
+                    case R.id.menu_pan:{
+                        fm.beginTransaction().replace(R.id.homeFrameLayout, new pancardkyc()).addToBackStack(null).commit();
+                        drawerLayout.closeDrawer(GravityCompat.START);
+                        break;
+                    }
+                    case R.id.menu_bank:{
+                        fm.beginTransaction().replace(R.id.homeFrameLayout, new Accountinfo()).addToBackStack(null).commit();
+                        drawerLayout.closeDrawer(GravityCompat.START);
                         break;
                     }
                     case R.id.menu_logout:{
-                         db.logout();
-                         Intent i = new Intent(getApplicationContext(),MainActivity.class);
-                         startActivity(i);
+                        db.logout();
+                        Intent i = new Intent(getApplicationContext(),MainActivity.class);
+                        startActivity(i);
                         drawerLayout.closeDrawer(GravityCompat.START);
                         break;}
                     case R.id.menu_sponsermember:{
-                        getSupportFragmentManager().beginTransaction().replace(R.id.homeFrameLayout, new member()).addToBackStack(null).commit();
+                        fm.beginTransaction().replace(R.id.homeFrameLayout, new member()).addToBackStack(null).commit();
                         drawerLayout.closeDrawer(GravityCompat.START);
                         break;}
                     case R.id.menu_downlinemember:{
-                        getSupportFragmentManager().beginTransaction().replace(R.id.homeFrameLayout, new member()).addToBackStack(null).commit();
+                        fm.beginTransaction().replace(R.id.homeFrameLayout, new member()).addToBackStack(null).commit();
                         drawerLayout.closeDrawer(GravityCompat.START);
                         break;}
                 }
@@ -124,9 +137,14 @@ public class homelayout extends AppCompatActivity {
 
     @Override
     public void onBackPressed(){
-        Intent a = new Intent(Intent.ACTION_MAIN);
-        a.addCategory(Intent.CATEGORY_HOME);
-        a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(a);
+        if(fm.getBackStackEntryCount()>0) {
+            for (int i = 0; i < getSupportFragmentManager().getBackStackEntryCount(); ++i)
+                fm.popBackStack();
+        }else {
+            Intent a = new Intent(Intent.ACTION_MAIN);
+            a.addCategory(Intent.CATEGORY_HOME);
+            a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(a);
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.ylifebsb;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,58 +8,100 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link Confirmpassword#newInstance} factory method to
- * create an instance of this fragment.
- */
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+
 public class Confirmpassword extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public Confirmpassword() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Confirmpassword.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static Confirmpassword newInstance(String param1, String param2) {
-        Confirmpassword fragment = new Confirmpassword();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_confirmpassword, container, false);
+        View view = inflater.inflate(R.layout.fragment_confirmpassword, container, false);
+        view.findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+        EditText newpass = (EditText) view.findViewById(R.id.newpasswordConfirmpasswordEditText);
+        EditText confirmpass = (EditText) view.findViewById(R.id.confirmConfirmPasswordEditText);
+        TextView alertbox = (TextView) view.findViewById(R.id.alertBoxConfirmPasswordTextView);
+        Button submit = (Button) view.findViewById(R.id.confirmpasswordButtonNewPassword);
+        Bundle args = getArguments();
+        String email = args.getString("email");
+        String otptext = args.getString("otp");
+        RequestQueue mRequestQueue = Volley.newRequestQueue(getActivity());
+
+
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(newpass.getText().toString().equals("")){
+                    alertbox.setText("Fill the new password column!");
+                }else if(confirmpass.getText().toString().equals("")){
+                    alertbox.setText("Fill the confirm password column!");
+                }else if(!(newpass.getText().toString().equals(confirmpass.getText().toString()))){
+                    alertbox.setText("Password doesn't match!");
+                }else {
+
+                    view.findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
+                    alertbox.setText("");
+                    String url = "https://srbn.herokuapp.com/auth/reset-password";
+                    JSONObject jsonObject = new JSONObject();
+                    try {
+
+                        jsonObject.put("email", email);
+                        jsonObject.put("otp",otptext);
+                        jsonObject.put("password",newpass.getText().toString());
+                        Response.Listener<JSONObject> successListener = new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                view.findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+                                Intent i = new Intent(getActivity(),MainActivity.class);
+                                Toast.makeText(getActivity(),"Successfully Password reset!",Toast.LENGTH_SHORT).show();
+                                startActivity(i);
+                            }
+                        };
+
+                        Response.ErrorListener errorListener = new Response.ErrorListener() {
+
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+
+                                view.findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+                                String responseBody = null;
+                                try {
+                                    responseBody = new String(error.networkResponse.data, "utf-8");
+
+                                    JSONObject data = new JSONObject(responseBody);
+                                    String message = (String) data.get("message");
+                                    alertbox.setText(message);
+                                } catch (UnsupportedEncodingException | JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        };
+                        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonObject, successListener, errorListener);
+                        mRequestQueue.add(request);
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        return view;
     }
 }

@@ -80,16 +80,15 @@
             <Button
                 android:id="@+id/verifyOtpBtn"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="45dp"
                 android:backgroundTint="#F44336"
                 android:text="Verify"
-                android:layout_weight="2"
                 android:layout_marginHorizontal="20dp"/>
             <Button
                 android:id="@+id/resendOtpBtn"
                 android:layout_width="match_parent"
                 android:layout_marginHorizontal="20dp"
-                android:layout_height="50dp"
+                android:layout_height="45dp"
                 android:background="@android:color/transparent"
                 android:clickable="true"
                 android:text="Resend OTP?"
@@ -98,6 +97,18 @@
 
                 android:backgroundTint="@android:color/transparent"/>
         </LinearLayout>
+        <RelativeLayout
+            android:id="@+id/loadingPanel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:forceHasOverlappingRendering="true"
+                android:indeterminate="true" />
+        </RelativeLayout>
     </LinearLayout>
 
 </FrameLayout>

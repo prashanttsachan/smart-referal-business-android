@@ -81,7 +81,7 @@ public class changePassword extends AppCompatActivity {
                         //This is for Headers If You Needed
                         public Map<String, String> getHeaders() throws AuthFailureError {
                             HashMap<String, String> headers = new HashMap<String, String>();
-                            headers.put("Authorization", token);
+                            headers.put("Authorization","Bearer "+ token);
                             return headers;
                         }
 

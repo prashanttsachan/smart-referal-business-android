@@ -69,10 +69,20 @@ public class Register extends Fragment {
                         Response.Listener<JSONObject> successListener = new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
+                                String message = new String();
+                                try {
+                                    message = response.getString("message");
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
                                 view.findViewById(R.id.loadingPanel).setVisibility(View.GONE);
-                                Intent i = new Intent(getActivity(),MainActivity.class);
-                                Toast.makeText(getActivity(), "Successfully Registered!", Toast.LENGTH_SHORT).show();
-                                startActivity(i);
+                                if(message.equals("A user already exists with this email/mobile.")){
+                                    alertbox.setText(message);
+                                }else {
+                                    Intent i = new Intent(getActivity(), MainActivity.class);
+                                    Toast.makeText(getActivity(), "Successfully Registered!", Toast.LENGTH_SHORT).show();
+                                    startActivity(i);
+                                }
                             }
                         };
 

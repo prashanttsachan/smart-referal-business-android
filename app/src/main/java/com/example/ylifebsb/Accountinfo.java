@@ -1,6 +1,7 @@
 package com.example.ylifebsb;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -96,16 +97,9 @@ public class Accountinfo extends Fragment {
                 new Response.Listener<NetworkResponse>(){
                     @Override
                     public void onResponse(NetworkResponse response) {
-                        try {
-                            JSONObject jsonObject = new JSONObject(new String(response.data));
-                            getView().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
-                            Toast.makeText(getActivity().getApplicationContext(),"Successfully uploaded the data.",Toast.LENGTH_SHORT).show();
-                            Intent i = new Intent(getContext(),homelayout.class);
-                            startActivity(i);
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        getView().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+                        Toast.makeText(getActivity(), "Successfully Uploaded!", Toast.LENGTH_LONG).show();
+                        getActivity().onBackPressed();
                     }
 
 
@@ -121,8 +115,11 @@ public class Accountinfo extends Fragment {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<String, String>();
-                String token = ((KYCadhaar)getContext()).getToken();
-                headers.put("Authorization", token);
+                DBHelper db = new DBHelper(getActivity());
+                Cursor c = db.getdata();
+                c.moveToNext();
+                String token = c.getString(c.getColumnIndex("token"));
+                headers.put("Authorization","Bearer "+ token);
                 return headers;
             }
             @Override

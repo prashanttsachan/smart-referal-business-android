@@ -2,6 +2,7 @@ package com.example.ylifebsb;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 
 import android.app.Application;
 import android.app.VoiceInteractor;
@@ -51,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
         }
         super.onStart();
     }
+
+    FragmentManager fm = getSupportFragmentManager();
 
     RequestQueue mRequestQueue;
 
@@ -145,14 +148,27 @@ public class MainActivity extends AppCompatActivity {
         forgotpassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.framelayout, new Forgetpassword()).addToBackStack(null).commit();
+                fm.beginTransaction().replace(R.id.framelayout, new Forgetpassword()).addToBackStack(null).commit();
             }
         });
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.framelayout, new Register()).addToBackStack(null).commit();
+                fm.beginTransaction().replace(R.id.framelayout, new Register()).addToBackStack(null).commit();
             }
         });
     }
+    @Override
+    public void onBackPressed(){
+        if(fm.getBackStackEntryCount()>0) {
+            fm.popBackStack();
+        }else {
+            Intent a = new Intent(Intent.ACTION_MAIN);
+            a.addCategory(Intent.CATEGORY_HOME);
+            a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(a);
+        }
+
+    }
+
 }

@@ -4,7 +4,7 @@
 
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:background="@drawable/headerbg"
+    android:background="@drawable/head"
     android:layout_height="100dp"
     android:weightSum="100">
     <LinearLayout
