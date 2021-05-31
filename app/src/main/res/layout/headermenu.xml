@@ -33,14 +33,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/white"
-        android:text="Dinesh Suthar"
         android:layout_marginTop="30dp"
         android:textStyle="bold"
         android:textSize="15dp"/>
     <TextView
         android:id="@+id/headeremailTextview"
         android:layout_width="wrap_content"
-        android:text="asdev82@gmail.com"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:textColor="@color/white"

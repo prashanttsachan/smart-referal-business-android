@@ -18,10 +18,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
 import com.android.volley.NetworkResponse;
+import com.android.volley.NoConnectionError;
+import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
@@ -73,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
 
         mRequestQueue = Volley.newRequestQueue(this);
         DBHelper db = new DBHelper(this);
+        try{
         signin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,15 +128,31 @@ public class MainActivity extends AppCompatActivity {
 
                                 findViewById(R.id.loadingPanel).setVisibility(View.GONE);
                                 String responseBody = null;
-                                try {
-                                    responseBody = new String(error.networkResponse.data, "utf-8");
+                                String message = null;
+                                if (error instanceof NetworkError) {
+                                    message = "Cannot connect to Internet...Please check your connection!";
+                                } else if (error instanceof ServerError) {
+                                    message = "The server could not be found. Please try again after some time!!";
+                                } else if (error instanceof AuthFailureError) {
+                                    message = "Cannot connect to Internet...Please check your connection!";
+                                } else if (error instanceof ParseError) {
+                                    message = "Parsing error! Please try again after some time!!";
+                                } else if (error instanceof NoConnectionError) {
+                                    message = "Cannot connect to Internet...Please check your connection!";
+                                } else if (error instanceof TimeoutError) {
+                                    message = "Connection TimeOut! Please check your internet connection.";
+                                }else {
+                                    try {
+                                        responseBody = new String(error.networkResponse.data, "utf-8");
 
-                                    JSONObject data = new JSONObject(responseBody);
-                                    String message = (String) data.get("message");
-                                    alertbox.setText(message);
-                                } catch (UnsupportedEncodingException | JSONException e) {
-                                    e.printStackTrace();
+                                        JSONObject data = new JSONObject(responseBody);
+                                        String mes = (String) data.get("message");
+                                        alertbox.setText(mes);
+                                    } catch (UnsupportedEncodingException | JSONException e) {
+                                        e.printStackTrace();
+                                    }
                                 }
+                                Toast.makeText(getApplicationContext(),message,Toast.LENGTH_SHORT).show();
                             }
                         };
                         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonObject, successListener, errorListener);
@@ -140,7 +163,10 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-        });
+        });}
+        catch (Exception e ){
+            Toast.makeText(getApplicationContext(),"Retry! "+e,Toast.LENGTH_SHORT).show();
+        }
         Button forgotpassword = (Button) findViewById(R.id.forgotPasswordBtn);
         Button register =  (Button) findViewById(R.id.registerBtn);
 

@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
     tools:context=".aadhar">
 
@@ -14,29 +15,37 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="15"
+            android:layout_weight="20"
             android:gravity="top"
             android:layout_marginTop="10dp"
             android:orientation="vertical"
             android:weightSum="10">
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="4"
+                android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
                 android:textStyle="bold"
                 android:textColor="@color/black"
                 android:textSize="17dp"
                 android:text="1. Enter the AADHAR Number in given Field."/>
-            <EditText
-                android:id="@+id/AadharNoEditText"
+
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="6"
-                android:inputType="number"
-                android:maxLength="12"
-                android:layout_marginHorizontal="20dp"
-                android:hint="Aadhar Number"/>
+                android:layout_height="wrap_content"
+                app:counterEnabled="true"
+                android:background="@android:color/transparent"
+                app:counterMaxLength="12"
+                android:layout_marginHorizontal="20dp">
+
+                <EditText
+                    android:id="@+id/AadharNoEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:maxLength="12"
+                    android:inputType="number"
+                    android:hint="Aadhar Number" />
+            </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -46,8 +55,7 @@
             android:weightSum="10">
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="wrap_content"
                 android:text="2. Upload the Aadhar card Image."
                 android:textStyle="bold"
                 android:textSize="17dp"
@@ -60,14 +68,12 @@
                 android:layout_height="0dp"
                 android:visibility="gone"
                 android:layout_weight="3"
-                android:layout_marginHorizontal="100dp"
-                />
+                android:layout_marginHorizontal="100dp" />
             <Button
                 android:id="@+id/chooseFrontImageAadhaarBtn"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center"
                 android:layout_height="40dp"
-                android:layout_marginVertical="10dp"
-                android:layout_marginHorizontal="100dp"
                 android:text="Browse Front Image"
                 android:backgroundTint="@color/white"
                 android:textColor="@color/black"/>
@@ -81,10 +87,10 @@
                 android:layout_marginHorizontal="100dp" />
             <Button
                 android:id="@+id/chooseBackImageAadhaarBtn"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_marginVertical="10dp"
-                android:layout_marginHorizontal="100dp"
+                android:layout_gravity="center"
                 android:text="Browse Back Image"
                 android:backgroundTint="@color/white"
                 android:textColor="@color/black"/>
@@ -92,7 +98,7 @@
                 android:id="@+id/kycAadharAlertBox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
+                android:layout_gravity="center"
                 android:layout_marginTop="10dp"
                 android:textColor="#F10C0C"/>
 
@@ -115,7 +121,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center">
-
             <ProgressBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -123,7 +128,5 @@
                 android:indeterminate="true" />
         </RelativeLayout>
 
-
     </LinearLayout>
-
 </FrameLayout>

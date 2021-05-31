@@ -3,8 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:clickable="true"
     android:layout_height="match_parent"
-    tools:context=".KYCadhaar">
+    tools:context=".homelayout">
 
 
         <LinearLayout
@@ -16,7 +17,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="50"
+                android:layout_weight="40"
                 android:gravity="start"
                 android:orientation="vertical"
                 android:weightSum="10">
@@ -29,34 +30,56 @@
                     android:textSize="17dp"
                     android:layout_margin="10dp"
                     android:text="1. Enter the Account Number in given Fields."/>
-                <EditText
-                    android:id="@+id/accountholdername"
+
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:layout_marginVertical="10dp"
-                    android:layout_marginHorizontal="20dp"
-                    android:hint="Account Holder Name"/>
-                <EditText
-                    android:id="@+id/accountnumber"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="20dp">
+
+                    <EditText
+                        android:id="@+id/accountholdername"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:inputType="text"
+                        android:hint="Account Holder Name" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:maxLength="18"
-                    android:layout_marginHorizontal="20dp"
-                    android:hint="Account Number"/>
-                <EditText
-                    android:id="@+id/IFSC"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="20dp">
+
+                    <EditText
+                        android:id="@+id/accountnumber"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:maxLength="18"
+                        android:inputType="number"
+                        android:hint="Account Number" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:maxLength="11"
-                    android:layout_marginVertical="10dp"
-                    android:layout_marginHorizontal="20dp"
-                    android:hint="IFSC"/>
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="20dp">
+
+                    <EditText
+                        android:id="@+id/IFSC"
+                        android:maxLength="11"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:inputType="text"
+                        android:hint="IFSC" />
+                </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:orientation="vertical"
-                android:layout_weight="40"
+                android:layout_weight="50"
                 android:weightSum="10">
                 <TextView
                     android:layout_width="wrap_content"

@@ -13,9 +13,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
@@ -46,7 +52,7 @@ public class Register extends Fragment {
 
         Button register = (Button) view.findViewById(R.id.registerBtnRegister);
 
-
+        try{
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,52 +72,73 @@ public class Register extends Fragment {
                         jsonObject.put("lastname", lastname.getText().toString());
                         jsonObject.put("password", password.getText().toString());
                         jsonObject.put("sponsor", sponser.getText().toString());
-                        Response.Listener<JSONObject> successListener = new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                String message = new String();
-                                try {
-                                    message = response.getString("message");
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                                view.findViewById(R.id.loadingPanel).setVisibility(View.GONE);
-                                if(message.equals("A user already exists with this email/mobile.")){
-                                    alertbox.setText(message);
-                                }else {
-                                    Intent i = new Intent(getActivity(), MainActivity.class);
-                                    Toast.makeText(getActivity(), "Successfully Registered!", Toast.LENGTH_SHORT).show();
-                                    startActivity(i);
-                                }
-                            }
-                        };
 
-                        Response.ErrorListener errorListener = new Response.ErrorListener() {
-
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-
-                                view.findViewById(R.id.loadingPanel).setVisibility(View.GONE);
-                                String responseBody = null;
-                                try {
-                                    responseBody = new String(error.networkResponse.data, "utf-8");
-                                    JSONObject data = new JSONObject(responseBody);
-                                    String message = (String) data.get("message");
-                                    alertbox.setText(message);
-                                } catch (UnsupportedEncodingException | JSONException e) {
-                                    e.printStackTrace();
+                            Response.Listener<JSONObject> successListener = new Response.Listener<JSONObject>() {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    String message = new String();
+                                    try {
+                                        message = response.getString("message");
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    view.findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+                                    if (message.equals("A user already exists with this email/mobile.")) {
+                                        alertbox.setText(message);
+                                    } else {
+                                        Intent i = new Intent(getActivity(), MainActivity.class);
+                                        Toast.makeText(getActivity(), "Successfully Registered!", Toast.LENGTH_SHORT).show();
+                                        startActivity(i);
+                                    }
                                 }
-                            }
-                        };
-                        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonObject, successListener, errorListener);
-                        mRequestQueue.add(request);
-                    } catch (JSONException e) {
-                        Toast.makeText(getActivity(), "JSON exception", Toast.LENGTH_SHORT).show();
-                    }
+                            };
+
+                            Response.ErrorListener errorListener = new Response.ErrorListener() {
+
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+
+                                    view.findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+                                    String responseBody = null;
+                                    String message = null;
+                                    if (error instanceof NetworkError) {
+                                        message = "Cannot connect to Internet...Please check your connection!";
+                                    } else if (error instanceof ServerError) {
+                                        message = "The server could not be found. Please try again after some time!!";
+                                    } else if (error instanceof AuthFailureError) {
+                                        message = "Cannot connect to Internet...Please check your connection!";
+                                    } else if (error instanceof ParseError) {
+                                        message = "Parsing error! Please try again after some time!!";
+                                    } else if (error instanceof NoConnectionError) {
+                                        message = "Cannot connect to Internet...Please check your connection!";
+                                    } else if (error instanceof TimeoutError) {
+                                        message = "Connection TimeOut! Please check your internet connection.";
+                                    }else{
+                                    try {
+                                        responseBody = new String(error.networkResponse.data, "utf-8");
+                                        JSONObject data = new JSONObject(responseBody);
+                                        String mes = (String) data.get("message");
+                                        alertbox.setText(mes);
+                                    } catch (UnsupportedEncodingException | JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    }
+                                    Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
+                                }
+                            };
+                            JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonObject, successListener, errorListener);
+                            mRequestQueue.add(request);
+                        } catch (JSONException e) {
+                            Toast.makeText(getActivity(), "JSON exception", Toast.LENGTH_SHORT).show();
+                        }
+
                 }
             }
 
-        });
+        });}
+        catch (Exception e){
+            Toast.makeText(getActivity(),"RETRY! "+e,Toast.LENGTH_SHORT).show();
+        }
         return view;
     }
 

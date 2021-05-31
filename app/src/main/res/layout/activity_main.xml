@@ -88,6 +88,7 @@
 
         <Button
             android:id="@+id/signInBtn"
+            android:textColor="@color/white"
             android:layout_width="match_parent"
             android:layout_marginHorizontal="20dp"
             android:layout_marginTop="10dp"
@@ -113,11 +114,13 @@
         <Button
             android:id="@+id/registerBtn"
             android:layout_width="match_parent"
+            android:textColor="@color/white"
             android:layout_height="45dp"
             android:backgroundTint="#009688"
             android:layout_marginTop="20dp"
             android:layout_marginHorizontal="30dp"
             android:text="Register now"/>
+
 
 
 
@@ -131,6 +134,7 @@
         android:id="@+id/loadingPanel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clickable="true"
         android:gravity="center">
 
         <ProgressBar

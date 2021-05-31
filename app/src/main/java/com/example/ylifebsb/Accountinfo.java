@@ -52,7 +52,7 @@ public class Accountinfo extends Fragment {
         choose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_PICK);
+                Intent intent = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 intent.setType("image/*");
                 startActivityForResult(intent,SELECT_PHOTO);
             }

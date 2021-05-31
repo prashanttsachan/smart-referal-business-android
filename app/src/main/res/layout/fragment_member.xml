@@ -2,108 +2,73 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
     android:layout_height="match_parent"
     tools:context=".member">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-        <LinearLayout
+        android:orientation="vertical"
+        android:weightSum="100">
+        <HorizontalScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:weightSum="100"
-            android:orientation="horizontal">
-
-            <TextView
-                android:gravity="center"
-                android:textAlignment="center"
-                android:text="Name"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:id="@+id/textView1"
-                android:textStyle="bold"
-                android:textColor="@color/white"
-                android:background="#233e8b"
-                android:layout_weight="25"/>
-
-            <TextView
-                android:gravity="center"
-                android:textAlignment="center"
-                android:textStyle="bold"
-                android:textColor="@color/white"
-                android:text="Email"
-                android:background="#233e8b"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:id="@+id/textView2"
-                android:layout_weight="25"/>
-
-            <TextView
-                android:gravity="center"
-                android:textAlignment="center"
-                android:text="Mobile"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:textStyle="bold"
-                android:textColor="@color/white"
-                android:background="#233e8b"
-                android:id="@+id/textView3"
-                android:layout_weight="25"/>
-
-            <TextView
-                android:gravity="center"
-                android:textAlignment="center"
-                android:text="Joining Date"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:textStyle="bold"
-                android:textColor="@color/white"
-                android:background="#233e8b"
-                android:id="@+id/textView4"
-                android:layout_weight="25"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="8">
+    <TableLayout
+        android:scrollbars="horizontal"
+        android:layout_width="fill_parent"
+        android:gravity="center"
+        android:layout_height="match_parent">
+    <TableRow
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent"
+        android:gravity="center"
+        android:weightSum="4">
+        <TextView
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:orientation="vertical">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <ListView
-                    android:id="@+id/Name"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="25">
-
-                </ListView>
-
-                <ListView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="25"
-                    android:id="@+id/Email">
-                </ListView>
-
-                <ListView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="25"
-                    android:id="@+id/Mobile">
-                </ListView>
-
-                <ListView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="25"
-                    android:id="@+id/Joingingdate">
-                </ListView>
-
-            </LinearLayout>
-        </LinearLayout>
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:text="Name"
+            android:gravity="center"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:textStyle="bold"
+            android:text="Email"
+            android:layout_weight="1"
+            android:gravity="center"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:textStyle="bold"
+            android:layout_weight="1"
+            android:text="Mobile"
+            android:gravity="center"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:textStyle="bold"
+            android:text="Joining"
+            android:layout_weight="1"
+            android:gravity="center"/>
+    </TableRow>
+    </TableLayout>
+        </HorizontalScrollView>
+    <com.mhmtk.twowaygrid.TwoWayGridView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:background="#E8E8E8"
+        android:id="@+id/gridview"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="92"
+        app:cacheColorHint="#E8E8E8"
+        app:numColumns="4"
+        app:stretchMode="columnWidth"
+        app:columnWidth="@dimen/cardview_compat_inset_shadow"
+        app:gravity="center"/>
     </LinearLayout>
 
 </FrameLayout>

@@ -13,11 +13,13 @@
         android:theme="@style/Theme.YLIFEBSB">
         <activity
             android:name=".homelayout"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/Theme.YLIFEBSB2"
+            android:screenOrientation="portrait"/>
         <activity android:name=".changePassword" />
         <activity
             android:name=".wallet"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity android:name=".userProfile" />
         <activity
             android:name=".MainActivity"
