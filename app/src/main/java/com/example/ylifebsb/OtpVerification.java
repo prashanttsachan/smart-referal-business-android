@@ -47,6 +47,7 @@ public class OtpVerification extends Fragment {
         Bundle args = getArguments();
         String email = args.getString("email");
         String otptext = args.getString("otp");
+        String frame = args.getString("frame");
         otp.setText(otptext);
         RequestQueue mRequestQueue = Volley.newRequestQueue(getActivity());
         verify.setOnClickListener(new View.OnClickListener() {
@@ -71,9 +72,16 @@ public class OtpVerification extends Fragment {
                                 final Bundle bundle = new Bundle();
                                 bundle.putString("email", email);
                                 bundle.putString("otp",otp.getText().toString());
-                                fragment.setArguments(bundle);
 
-                                t.replace(R.id.framelayout, fragment).addToBackStack(null).commit();
+                                if(frame.equals("changepassword")){
+                                    bundle.putString("frame","changepassword");
+                                    fragment.setArguments(bundle);
+                                    t.replace(R.id.changepasswordFrameLayout, fragment).addToBackStack(null).commit();
+                                }else {
+                                    bundle.putString("frame","framelayout");
+                                    fragment.setArguments(bundle);
+                                    t.replace(R.id.framelayout, fragment).addToBackStack(null).commit();
+                                }
 
 
                             }

@@ -12,6 +12,9 @@
         <item android:id="@+id/menu_transaction"
             android:icon="@drawable/transaction"
             android:title="Transaction"/>
+        <item android:id="@+id/menu_transfertobank"
+            android:icon="@drawable/transfertobank"
+            android:title="Transfer To Bank"/>
 
     </group>
     <group>
@@ -36,12 +39,9 @@
     <group >
         <item android:title="Member">
             <menu>
-                <item android:id="@+id/menu_sponsermember"
+                <item android:id="@+id/menu_level"
                     android:icon="@drawable/member"
-                    android:title="Sponser Member"/>
-                <item android:id="@+id/menu_downlinemember"
-                    android:icon="@drawable/member"
-                    android:title="Downline Member"/>
+                    android:title="Level"/>
             </menu>
         </item>
     </group>

@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".detail_transaction">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="100">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:orientation="horizontal"
+            android:weightSum="10"
+            android:background="#00BCD4">
+            <ImageView
+                android:id="@+id/backButtonDetail"
+                android:layout_width="0dp"
+                android:clickable="true"
+                android:layout_weight="2"
+                android:layout_margin="6dp"
+                android:padding="9dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/backicon"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="30"
+            android:background="#00BCD4"
+            android:orientation="horizontal"
+            android:padding="10dp"
+            android:weightSum="10">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginStart="10dp"
+                android:layout_gravity="center"
+                android:padding="10dp"
+                android:layout_weight="9">
+                <TextView
+                    android:id="@+id/typeDetailTransaction"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="CREDITED"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:textSize="24dp"/>
+                <TextView
+                    android:id="@+id/AmountdetailTransaction"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="+ 45000 INR"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/white"
+                    android:textSize="24dp"/>
+                <TextView
+                    android:id="@+id/createdTimeDetailTransaction"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="03 jun 2020 03:26 PM"
+                    android:textColor="@color/white"/>
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/statusImageViewdetailTransaction"
+                android:layout_width="60dp"
+
+                android:layout_gravity="center"
+                android:layout_height="60dp"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            android:weightSum="10"
+            android:gravity="center"
+            android:layout_weight="10">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Member"
+                android:layout_weight="3"
+                android:layout_marginStart="10dp"
+                android:textSize="20dp"
+                android:textColor="@color/black"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/memberDetailTransaction"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:layout_weight="7"
+                android:text="23123124csdf3"
+                android:textSize="16dp" />
+        </LinearLayout>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/horizontalline"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            android:weightSum="10"
+            android:gravity="center"
+            android:layout_weight="10">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="Last Updated"
+                android:layout_weight="3"
+                android:textSize="20dp"
+                android:layout_marginStart="10dp"
+                android:textColor="@color/black"
+                android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/UpdatedDetailTransaction"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:layout_weight="7"
+                android:text="23123124csdf3"
+                android:textSize="16dp" />
+        </LinearLayout>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/horizontalline"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:weightSum="10"
+            android:layout_weight="10">
+            <TextView
+
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Remarks"
+                android:layout_weight="3"
+                android:layout_marginStart="10dp"
+                android:textSize="20dp"
+                android:textColor="@color/black"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/RemarksDetailTransaction"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:layout_weight="7"
+                android:text="Dew"
+                android:textSize="16dp" />
+        </LinearLayout>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/horizontalline"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            android:weightSum="10"
+            android:gravity="center"
+            android:layout_weight="10">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="ID"
+                android:layout_weight="3"
+                android:textSize="20dp"
+                android:textColor="@color/black"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/idDetailTransaction"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:layout_weight="7"
+                android:text="saf112123sdww123d"
+                android:textSize="16dp" />
+        </LinearLayout>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/horizontalline"/>
+
+
+    </LinearLayout>
+
+
+
+</RelativeLayout>

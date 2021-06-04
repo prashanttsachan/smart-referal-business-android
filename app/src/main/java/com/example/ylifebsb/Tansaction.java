@@ -1,26 +1,19 @@
 package com.example.ylifebsb;
 
-import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Color;
-import android.graphics.Typeface;
-import android.icu.text.RelativeDateTimeFormatter;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.os.Trace;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.GridView;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
-import android.widget.TableLayout;
-import android.widget.TableRow;
+import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkError;
@@ -34,50 +27,37 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.mhmtk.twowaygrid.TwoWayGridView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Random;
+
+
+public class Tansaction extends Fragment {
 
 
 
-
-public class member extends Fragment {
-    ArrayList<items> td;
-    ListView listView;
-    String id;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_member, container, false);
-        listView = view.findViewById(R.id.listitems);
-        id = getArguments().getString("id");
-        listView = (ListView) view.findViewById(R.id.listitemsmembers);
-        td = new ArrayList<items>();
-        FillList();
-        homelayout hl =(homelayout)getActivity();
-        hl.i = 1;
-        return view;
-    }
+        View view =  inflater.inflate(R.layout.fragment_tansaction, container, false);
+        ListView listView = (ListView) view.findViewById(R.id.transactionListView);
+        ArrayList<transaction_Data> Atd = new ArrayList<transaction_Data>();
 
-
-    public void FillList() {
-        StringRequest request = new StringRequest(Request.Method.POST,"https://srbn.herokuapp.com/member/downline", new Response.Listener<String>() {
+        StringRequest request = new StringRequest(Request.Method.GET,"https://srbn.herokuapp.com/wallet/transactions", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                getView().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+
+                view.findViewById(R.id.loadingPanel).setVisibility(View.GONE);
                 JSONObject jsonObject = new JSONObject();
                 //Data is shown in the profile throw api
                 try {
-                    jsonObject= new JSONObject(response);
+                     jsonObject= new JSONObject(response);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -87,38 +67,54 @@ public class member extends Fragment {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                if (mylist.length()<=0 || mylist==null){
-                    items item = new items();
-                    item.name="";
-                    item.joiningDate="";
-                    item.email = "NO DATA PRESENT";
-                    td.add(item);
-                    listView.setClickable(false);
+                if(mylist==null || mylist.length()<=0){
+                    transaction_Data item = new transaction_Data();
+                    listView.setVisibility(View.GONE);
+                    item.type="";
+                    getView().findViewById(R.id.notransactionImageview).setVisibility(View.VISIBLE);
+                    Atd.add(item);
                 }else
                 for (int i = 0; i < mylist.length(); i++) {
                     try {
                         JSONObject jsonobject = null;
-                        items it = new items();
+
                         jsonobject = (JSONObject) mylist.get(i);
-                        String firstname = jsonobject.optString("firstname");
-                        String lastname = jsonobject.optString("lastname");
-                        it.name = firstname +" "+ lastname;
-                        it.email = jsonobject.optString("email");
-                        it.joiningDate = jsonobject.optString("createdAt");
-                        td.add(it);
+
+                    transaction_Data td = new transaction_Data();
+                    td.amount = jsonobject.optString("amount");
+                    td.balance = jsonobject.optString("balance");
+                    td.createdAt = jsonobject.optString("createdAt");
+                    td.updatedAt = jsonobject.optString("updatedAt");
+                    td.status = jsonobject.optString("status");
+                    td.id = jsonobject.optString("id");
+                    td.member = jsonobject.optString("member");
+                    td.remarks = jsonobject.optString("remarks");
+                    td.type = jsonobject.optString("type");
+                    Atd.add(td);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
-                member_adaptor adapt = new member_adaptor(getContext(),td);
+                transaction_adaptor adapt = new transaction_adaptor(getContext(),Atd);
                 listView.setAdapter(adapt);
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Intent startint = new Intent(getActivity(),detail_transaction.class);
+                        transaction_Data td;
+                        td = (transaction_Data) listView.getItemAtPosition(position);
+                        startint.putExtra("transaction_data", (Serializable)td);
+                        startActivity(startint);
+                    }
+                });
 
             }
 
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                getView().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+
+               view.findViewById(R.id.loadingPanel).setVisibility(View.GONE);
                 String message = null;
                 if (error instanceof NetworkError) {
                     message = "Cannot connect to Internet...Please check your connection!";
@@ -149,16 +145,12 @@ public class member extends Fragment {
                 headers.put("Authorization","Bearer "+ token);
                 return headers;
             }
-
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                HashMap<String,String> para = new HashMap<String, String>();
-
-                para.put("level",id);
-                return para;
-            }
         };
         RequestQueue queue = Volley.newRequestQueue(getActivity());
         queue.add(request);
+
+
+
+        return view;
     }
 }

@@ -11,6 +11,8 @@
     tools:openDrawer="start"
     tools:context=".homelayout">
 
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -31,6 +33,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/bgnew"
+                android:gravity="top|bottom"
                 android:orientation="vertical">
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -83,7 +86,6 @@
                         android:id="@+id/walletBalanceTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="00.00"
                         android:textSize="28sp"
                         android:textColor="#fff"
                         android:textStyle="bold"
@@ -125,11 +127,26 @@
                         tools:ignore="RtlSymmetry" />
 
                 </LinearLayout>
+               <RelativeLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="match_parent">
+                   <Button
+                       android:id="@+id/upgradeAccountBtn"
+                       android:layout_width="match_parent"
+                       android:layout_height="45dp"
+                       android:layout_marginHorizontal="60dp"
+                       android:text="UPGRADE"
+                       android:visibility="gone"
+                       android:backgroundTint="#F44336"
+                       android:layout_alignParentBottom="true"/>
+               </RelativeLayout>
             </LinearLayout>
+
             <RelativeLayout
                 android:id="@+id/loadingPanel"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:clickable="true"
                 android:gravity="center">
 
                 <ProgressBar
@@ -147,6 +164,9 @@
         app:headerLayout="@layout/headermenu"
         app:menu="@menu/iconmenu"
         android:layout_gravity="start"/>
+
+
+
 
 
 

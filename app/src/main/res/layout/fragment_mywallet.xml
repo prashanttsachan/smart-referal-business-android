@@ -1,53 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:orientation="vertical"
     android:layout_height="match_parent"
-    android:background="@drawable/newbg"
-    android:padding="10dp"
-    tools:context=".wallet">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
 
-    <RelativeLayout
+    tools:context=".mywallet">
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="30dp"
-        android:paddingLeft="25dp"
-        android:paddingRight="25dp">
+        android:orientation="vertical"
+        android:layout_height="match_parent"
+        android:background="@drawable/newbg"
 
-        <TextView
-            android:id="@+id/t1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Welcome Back,"
-            android:textSize="20sp"
-            android:textColor="#fff"/>
-
-        <TextView
-            android:id="@+id/userNameWalletTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="NAME"
-            android:textColor="#fff"
-            android:layout_below="@id/t1"
-            android:textSize="28sp"
-            android:fontFamily="sans-serif-black" />
-
-        <ImageView
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:src="@drawable/pr"
-            android:layout_alignParentEnd="true"
-           />
-
-    </RelativeLayout>
+        android:padding="10dp">
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_marginHorizontal="10dp"
+        android:layout_marginHorizontal="20dp"
         android:orientation="vertical"
         android:background="@drawable/card_view"
         android:layout_gravity="center"
@@ -60,19 +31,20 @@
             android:textSize="25sp"
             tools:ignore="RtlSymmetry"
             android:textColor="#fff"
-            android:paddingStart="40dp"
-            android:paddingTop="50dp"/>
+            android:paddingStart="20dp"
+            android:paddingTop="20dp"/>
 
         <TextView
+            android:id="@+id/walletBalanceWalletTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Balance"
-            android:textSize="35sp"
+            android:text="0"
+            android:textSize="30sp"
             android:textColor="#fff"
             android:textStyle="bold"
             android:fontFamily="sans-serif-black"
-            android:paddingStart="40dp"
-            android:paddingTop="10dp"
+            android:paddingStart="20dp"
+            android:paddingTop="5dp"
             tools:ignore="RtlSymmetry" />
 
     </LinearLayout>
@@ -202,16 +174,7 @@
             android:textColor="#516b9e"
             android:letterSpacing="0.02"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="See All"
-            android:textSize="23sp"
-            android:textColor="#D06D88BD"
-            android:gravity="end"
-            android:clickable="true"
-            android:layout_marginRight="16dp"
-            android:focusable="true" />
+
 
     </LinearLayout>
     <LinearLayout
@@ -219,14 +182,39 @@
         android:layout_height="wrap_content">
 
         <ListView
+            android:id="@+id/listViewMyWallet"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"/>
+        <ImageView
+            android:id="@+id/notransactionImageview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:padding="50dp"
+            android:src="@drawable/notransaction"/>
 
-        </ListView>
+
 
 
     </LinearLayout>
 
 
+    </LinearLayout>
+    <RelativeLayout
+        android:id="@+id/loadingPanel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:background="@color/white"
+        android:gravity="center">
 
-</LinearLayout>
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:forceHasOverlappingRendering="true"
+            android:indeterminate="true" />
+    </RelativeLayout>
+
+
+</FrameLayout>

@@ -1,6 +1,7 @@
 package com.example.ylifebsb;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -18,12 +19,14 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
@@ -34,6 +37,7 @@ public class changePassword extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password);
+        findViewById(R.id.loadingPanel).setVisibility(View.GONE);
         DBHelper db = new DBHelper(this);
         Cursor c = db.getdata();
         c.moveToNext();
@@ -41,9 +45,21 @@ public class changePassword extends AppCompatActivity {
         EditText oldpassword = (EditText) findViewById(R.id.oldpasswordchangePasswordEditText);
         EditText newpassword = (EditText) findViewById(R.id.newpasswordchangePasswordEditText);
         EditText confirmpassword = (EditText) findViewById(R.id.confirmNewPasswordChangePasswordEditText);
+
         Button change = (Button) findViewById(R.id.changepasswordBtnInchangePassword);
+
         TextView alertbox = (TextView) findViewById(R.id.alertBoxChangePasswordTextView);
-        findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+
+
+        Button forgotpassword = (Button) findViewById(R.id.forgotpasswordchangepassword);
+        forgotpassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
+                forgotpassword();
+            }
+        });
+
         change.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -99,5 +115,56 @@ public class changePassword extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void forgotpassword(){
+        RequestQueue mRequestQueue = Volley.newRequestQueue(getApplicationContext());
+        DBHelper db = new DBHelper(getApplicationContext());
+        Cursor c = db.getdata();
+        c.moveToNext();
+        String email = c.getString(c.getColumnIndex("email"));
+        String url = "https://srbn.herokuapp.com/auth/forget-password";
+        JSONObject jsonObject = new JSONObject();
+        try {
+
+            jsonObject.put("email", email);
+            Response.Listener<JSONObject> successListener = new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+
+                    findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+                    String otp = new String();
+
+                    try {
+                        String message = response.getString("message");
+                        otp = message.replaceAll("[^0-9]","");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    final Bundle bundle = new Bundle();
+                    bundle.putString("email", email);
+                    bundle.putString("otp",otp);
+                    bundle.putString("frame","changepassword");
+                    Fragment fragment = new OtpVerification();
+                    fragment.setArguments(bundle);
+                    getSupportFragmentManager().beginTransaction().replace(R.id.changepasswordFrameLayout, fragment).addToBackStack(null).commit();
+                }
+            };
+
+            Response.ErrorListener errorListener = new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                        findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+                        String message = "Failed to Load,Retry!";
+                        Toast.makeText(getApplicationContext(),message,Toast.LENGTH_SHORT).show();
+                }
+            };
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonObject, successListener, errorListener);
+            mRequestQueue.add(request);
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -1,26 +1,19 @@
 package com.example.ylifebsb;
 
-import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Color;
-import android.graphics.Typeface;
-import android.icu.text.RelativeDateTimeFormatter;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkError;
@@ -34,43 +27,41 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.mhmtk.twowaygrid.TwoWayGridView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 
-
-
-public class member extends Fragment {
-    ArrayList<items> td;
+public class Levels extends Fragment {
     ListView listView;
-    String id;
+    Bundle bundle;
+    Fragment mem ;
+    ArrayList<items> td;
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_member, container, false);
+        View view = inflater.inflate(R.layout.fragment_levels, container, false);
         listView = view.findViewById(R.id.listitems);
-        id = getArguments().getString("id");
-        listView = (ListView) view.findViewById(R.id.listitemsmembers);
         td = new ArrayList<items>();
+        bundle = new Bundle();
+        mem = new member();
         FillList();
-        homelayout hl =(homelayout)getActivity();
-        hl.i = 1;
         return view;
     }
 
 
-    public void FillList() {
-        StringRequest request = new StringRequest(Request.Method.POST,"https://srbn.herokuapp.com/member/downline", new Response.Listener<String>() {
+
+    public void FillList(){
+        StringRequest request = new StringRequest(Request.Method.GET,"https://srbn.herokuapp.com/member/levels", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 getView().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
@@ -87,24 +78,22 @@ public class member extends Fragment {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                if (mylist.length()<=0 || mylist==null){
+                if (mylist.length()<=0){
                     items item = new items();
-                    item.name="";
-                    item.joiningDate="";
+                    item.name="NO DATA PRESENT";
+                    item.joiningDate="NO DATA PRESENT";
                     item.email = "NO DATA PRESENT";
                     td.add(item);
-                    listView.setClickable(false);
                 }else
                 for (int i = 0; i < mylist.length(); i++) {
                     try {
                         JSONObject jsonobject = null;
                         items it = new items();
                         jsonobject = (JSONObject) mylist.get(i);
-                        String firstname = jsonobject.optString("firstname");
-                        String lastname = jsonobject.optString("lastname");
-                        it.name = firstname +" "+ lastname;
-                        it.email = jsonobject.optString("email");
+                        it.name = String.valueOf(jsonobject.optInt("level"));
+                        it.email = String.valueOf(jsonobject.optInt("totalMembers"));
                         it.joiningDate = jsonobject.optString("createdAt");
+                        it.id = jsonobject.optString("id");
                         td.add(it);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -112,7 +101,17 @@ public class member extends Fragment {
                 }
                 member_adaptor adapt = new member_adaptor(getContext(),td);
                 listView.setAdapter(adapt);
-
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        items item;
+                        item = (items) listView.getItemAtPosition(position);
+                        String name = item.name;
+                        mem.setArguments(bundle);
+                        bundle.putString("id",item.id);
+                        getFragmentManager().beginTransaction().replace(R.id.homeFrameLayout,mem).addToBackStack(null).commit();
+                    }
+                });
             }
 
         }, new Response.ErrorListener() {
@@ -149,16 +148,10 @@ public class member extends Fragment {
                 headers.put("Authorization","Bearer "+ token);
                 return headers;
             }
-
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                HashMap<String,String> para = new HashMap<String, String>();
-
-                para.put("level",id);
-                return para;
-            }
         };
         RequestQueue queue = Volley.newRequestQueue(getActivity());
         queue.add(request);
     }
+
+
 }

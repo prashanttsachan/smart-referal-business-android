@@ -6,14 +6,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.transition.Slide;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
@@ -39,17 +43,22 @@ import com.google.android.material.textfield.TextInputLayout;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class homelayout extends AppCompatActivity {
+import static android.R.color.white;
+
+public class homelayout extends AppCompatActivity  {
     NavigationView nav;
     ActionBarDrawerToggle toggle;
     DrawerLayout drawerLayout;
     FragmentManager fm = getSupportFragmentManager();
+    Button upgrade;
+    int i = 0 ;
 
     @Override
     protected void onStart() {
@@ -67,6 +76,7 @@ public class homelayout extends AppCompatActivity {
             TextView name = (TextView) hview.findViewById(R.id.headernameTextView);
             TextView email = (TextView) hview.findViewById(R.id.headeremailTextview);
             TextView walletbalance = (TextView) findViewById(R.id.walletBalanceTextView);
+            upgrade = findViewById(R.id.upgradeAccountBtn);
 
 
             //API call to get data and show it on the screen
@@ -81,11 +91,16 @@ public class homelayout extends AppCompatActivity {
                         data = jsonObject.getJSONObject("data");
                         JSONObject user = new JSONObject();
                         user = data.getJSONObject("user");
-                        walletbalance.setText(user.getString("wallet"));
+                        boolean upgraded = user.getBoolean("upgraded");
+                        walletbalance.setText(user.getString("wallet")+" INR");
                         name.setText(user.getString("firstname")+" "+user.getString("lastname"));
                         email.setText(user.getString("email"));
                         TextView usernameHomeScreen = (TextView) findViewById(R.id.userNameHomeTextView);
                         usernameHomeScreen.setText(user.getString("firstname")+" "+user.getString("lastname"));
+
+                        if(!(upgraded)){
+                            upgrade.setVisibility(View.VISIBLE);
+                        }
 
 
 
@@ -126,9 +141,6 @@ public class homelayout extends AppCompatActivity {
             RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
             queue.add(request);
         }
-
-
-
         super.onStart();
     }
 
@@ -140,6 +152,14 @@ public class homelayout extends AppCompatActivity {
         DBHelper db = new DBHelper(this);
         Cursor c = db.getdata();
         c.moveToNext();
+        upgrade = findViewById(R.id.upgradeAccountBtn);
+        upgrade.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
+                UpgradeAccount();
+            }
+        });
         nav =(NavigationView) findViewById(R.id.headermenu);
         View hview = nav.getHeaderView(0);
         CircleImageView circleimg = (CircleImageView) hview.findViewById(R.id.userimagecircularview);
@@ -150,11 +170,8 @@ public class homelayout extends AppCompatActivity {
                 startActivity(i);
             }
         });
-
-
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
         toggle =  new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.open,R.string.close);
         drawerLayout.addDrawerListener(toggle);
@@ -171,13 +188,14 @@ public class homelayout extends AppCompatActivity {
                         break;
                     }
                     case R.id.menu_wallet:{
-                        Intent i = new Intent(getApplicationContext(),wallet.class);
-                        startActivity(i);
+                        toolbar.setTitle("Wallet");
+                        fm.beginTransaction().replace(R.id.homeFrameLayout, new mywallet()).addToBackStack(null).commit();
                         drawerLayout.closeDrawer(GravityCompat.START);
                         break;
                     }
                     case R.id.menu_transaction:{
-                        Toast.makeText(getApplicationContext(),"success",Toast.LENGTH_SHORT).show();
+                        toolbar.setTitle("Transaction");
+                        fm.beginTransaction().replace(R.id.homeFrameLayout, new Tansaction()).addToBackStack(null).commit();
                         drawerLayout.closeDrawer(GravityCompat.START);
                         break;
                     }
@@ -205,14 +223,14 @@ public class homelayout extends AppCompatActivity {
                         startActivity(i);
                         drawerLayout.closeDrawer(GravityCompat.START);
                         break;}
-                    case R.id.menu_sponsermember:{
-                        toolbar.setTitle("Sponser Member");
-                        fm.beginTransaction().replace(R.id.homeFrameLayout, new member()).addToBackStack(null).commit();
+                    case R.id.menu_level:{
+                        toolbar.setTitle("Level");
+                        fm.beginTransaction().replace(R.id.homeFrameLayout, new Levels()).addToBackStack(null).commit();
                         drawerLayout.closeDrawer(GravityCompat.START);
                         break;}
-                    case R.id.menu_downlinemember:{
-                        toolbar.setTitle("Downline Member");
-                        fm.beginTransaction().replace(R.id.homeFrameLayout, new member()).addToBackStack(null).commit();
+                    case R.id.menu_transfertobank:{
+                        toolbar.setTitle("Transfer To Bank");
+                        fm.beginTransaction().replace(R.id.homeFrameLayout, new transfettobank()).addToBackStack(null).commit();
                         drawerLayout.closeDrawer(GravityCompat.START);
                         break;}
                 }
@@ -223,6 +241,10 @@ public class homelayout extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        if(i>0){
+            fm.popBackStack();
+            i=0;
+        }else
         if (drawerLayout.isDrawerOpen(GravityCompat.START)){
             drawerLayout.closeDrawer(GravityCompat.START);
         } else
@@ -238,4 +260,54 @@ public class homelayout extends AppCompatActivity {
             startActivity(a);
         }
     }
+
+    public void UpgradeAccount(){
+        StringRequest request = new StringRequest(Request.Method.POST,"https://srbn.herokuapp.com/user/upgrade-account", new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+                Intent i = new Intent(getApplicationContext(),homelayout.class);
+                Toast.makeText(getApplicationContext(),"Successfully Upgraded!",Toast.LENGTH_SHORT).show();
+                startActivity(i);
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+                String message = null;
+                if (error instanceof NetworkError) {
+                    message = "Cannot connect to Internet...Please check your connection!";
+                } else if (error instanceof ServerError) {
+                    message = "The server could not be found. Please try again after some time!!";
+                } else if (error instanceof AuthFailureError) {
+                    message = "Cannot connect to Internet...Please check your connection!";
+                } else if (error instanceof ParseError) {
+                    message = "Parsing error! Please try again after some time!!";
+                } else if (error instanceof NoConnectionError) {
+                    message = "Cannot connect to Internet...Please check your connection!";
+                } else if (error instanceof TimeoutError) {
+                    message = "Connection TimeOut! Please check your internet connection.";
+                }else {
+                    message = "Failed To Upgrade !";
+                }
+                Toast.makeText(getApplicationContext(),message,Toast.LENGTH_SHORT).show();
+            }
+        }) {
+            //This is for Headers
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                DBHelper db = new DBHelper(getApplicationContext());
+                Cursor c = db.getdata();
+                c.moveToNext();
+                String token = c.getString(c.getColumnIndex("token"));
+                headers.put("Authorization","Bearer "+ token);
+                return headers;
+            }
+        };
+        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+        queue.add(request);
+    }
+
 }

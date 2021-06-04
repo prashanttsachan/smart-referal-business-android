@@ -79,6 +79,7 @@ public class Forgetpassword extends Fragment {
                                 final Bundle bundle = new Bundle();
                                 bundle.putString("email", email.getText().toString());
                                 bundle.putString("otp",otp);
+                                bundle.putString("frame","framelayout");
                                 fragment.setArguments(bundle);
 
                                 t.replace(R.id.framelayout, fragment).addToBackStack(null).commit();

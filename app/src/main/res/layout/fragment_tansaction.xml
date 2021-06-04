@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:background="@color/white"
+    tools:context=".Tansaction">
+
+ <ListView
+     android:id="@+id/transactionListView"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"/>
+ <RelativeLayout
+     android:id="@+id/loadingPanel"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+     android:clickable="true"
+     android:gravity="center">
+
+  <ProgressBar
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:forceHasOverlappingRendering="true"
+      android:indeterminate="true" />
+
+ </RelativeLayout>
+
+ <ImageView
+     android:id="@+id/notransactionImageview"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+     android:visibility="gone"
+     android:src="@drawable/notransaction"
+     android:padding="100dp"/>
+
+
+</FrameLayout>

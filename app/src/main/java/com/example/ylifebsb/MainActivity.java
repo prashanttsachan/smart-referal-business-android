@@ -99,25 +99,35 @@ public class MainActivity extends AppCompatActivity {
                         Response.Listener<JSONObject> successListener = new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
-
-                                JSONObject data = new JSONObject();
+                                findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+                                String message = null;
                                 try {
-                                    data = response.getJSONObject("data");
-                                    String token = (String) data.getString("access_token");
-                                    JSONObject user = new JSONObject();
-                                    user = data.getJSONObject("user");
-                                    String name = user.getString("firstname") + " " + user.getString("lastname");
-                                    String email = user.getString("email");
-                                    db.insert(token, name, email);
+                                    message = response.getString("message");
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
+                                if (message.equals("User not exists.")) {
+                                    alertbox.setText("User not exists.");
+                                } else if (message.equals("Password doesn't match.")) {
+                                    alertbox.setText("Password doesn't match.");
+                                } else {
+                                    JSONObject data = new JSONObject();
+                                    try {
+                                        data = response.getJSONObject("data");
+                                        String token = (String) data.getString("access_token");
+                                        JSONObject user = new JSONObject();
+                                        user = data.getJSONObject("user");
+                                        String name = user.getString("firstname") + " " + user.getString("lastname");
+                                        String email = user.getString("email");
+                                        db.insert(token, name, email);
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
 
-
-                                findViewById(R.id.loadingPanel).setVisibility(View.GONE);
-                                Intent i = new Intent(getApplicationContext(), homelayout.class);
-                                Toast.makeText(getApplicationContext(), "Successfully logged In", Toast.LENGTH_SHORT).show();
-                                startActivity(i);
+                                    Intent i = new Intent(getApplicationContext(), homelayout.class);
+                                    Toast.makeText(getApplicationContext(), "Successfully logged In", Toast.LENGTH_SHORT).show();
+                                    startActivity(i);
+                                }
                             }
                         };
 
@@ -142,15 +152,7 @@ public class MainActivity extends AppCompatActivity {
                                 } else if (error instanceof TimeoutError) {
                                     message = "Connection TimeOut! Please check your internet connection.";
                                 }else {
-                                    try {
-                                        responseBody = new String(error.networkResponse.data, "utf-8");
-
-                                        JSONObject data = new JSONObject(responseBody);
-                                        String mes = (String) data.get("message");
-                                        alertbox.setText(mes);
-                                    } catch (UnsupportedEncodingException | JSONException e) {
-                                        e.printStackTrace();
-                                    }
+                                    message = "Failed!";
                                 }
                                 Toast.makeText(getApplicationContext(),message,Toast.LENGTH_SHORT).show();
                             }

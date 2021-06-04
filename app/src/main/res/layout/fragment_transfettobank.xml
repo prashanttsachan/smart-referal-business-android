@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:background="#00BCD4"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".transfettobank">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/layoutbg"
+        android:layout_marginTop="10dp"
+        android:layout_marginHorizontal="5dp"
+        android:weightSum="100"
+        android:paddingTop="10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Payout Request"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:textSize="18dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Enter Amount"
+                android:textSize="18dp"/>
+            <EditText
+                android:id="@+id/amountEditTextTransfertobank"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:background="@drawable/edittextboxxed"
+                android:hint="0"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:inputType="numberDecimal"
+                android:textSize="25dp"
+                android:paddingHorizontal="10dp"/>
+            <TextView
+                android:id="@+id/alertBoxTransfertoBank"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#FF0000"
+                android:layout_marginTop="5dp"/>
+
+        </LinearLayout>
+
+
+            <Button
+                android:id="@+id/proceedBtnTransfertobank"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:textColor="@color/white"
+                android:theme="@style/Theme.YLIFEBSB3"
+                android:background="@drawable/buttonboxed"
+                android:text="Proceed"
+                android:layout_marginHorizontal="20dp"/>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="20dp"
+            android:src="@drawable/horizontalline"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="Transaction History"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="18dp"/>
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:id="@+id/listViewTransfertobank"/>
+        <ImageView
+            android:id="@+id/notransactionImageviewtransfertobank"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:src="@drawable/notransaction"
+            android:padding="50dp"/>
+
+
+
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/loadingPanel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:gravity="center">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:forceHasOverlappingRendering="true"
+            android:indeterminate="true" />
+    </RelativeLayout>
+
+
+
+</FrameLayout>
